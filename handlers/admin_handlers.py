@@ -3,18 +3,16 @@ from telegram.ext import ContextTypes
 from database.database import get_db
 from database.models import User, CheckIn
 from datetime import datetime, timedelta
+from config import ADMIN_IDS
+
+async def is_admin(telegram_id: int) -> bool:
+    return telegram_id in ADMIN_IDS
 
 async def get_overtime_report(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     db = next(get_db())
     
-    # Check if user is admin
-    admin = db.query(User).filter(
-        User.telegram_id == user_id,
-        User.is_admin == True
-    ).first()
-    
-    if not admin:
+    if not await is_admin(user_id):
         await update.message.reply_text("You don't have permission to use this command!")
         return
     

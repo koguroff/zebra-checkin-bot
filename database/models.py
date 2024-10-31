@@ -10,7 +10,6 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     telegram_id = Column(Integer, unique=True)
     username = Column(String)
-    is_admin = Column(Boolean, default=False)
     check_ins = relationship("CheckIn", back_populates="user")
 
 class CheckIn(Base):
